@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <AssemblyName>MiniTM</AssemblyName>
+    <RootNamespace>MiniTM</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MiniTM.Core\MiniTM.Core.csproj" />
+  </ItemGroup>
+
+</Project>

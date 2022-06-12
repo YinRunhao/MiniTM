@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <Nullable>annotations</Nullable>
+    <AssemblyName>MiniTM.Core</AssemblyName>
+    <RootNamespace>MiniTM.Core</RootNamespace>
+  </PropertyGroup>
+
+</Project>
