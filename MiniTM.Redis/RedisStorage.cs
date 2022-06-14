@@ -48,25 +48,29 @@ namespace MiniTM.Redis
 
             string key = GetDistinctJobKey(jobType);
             var db = await m_Conn.GetDatabaseAsync(m_Config.DefDb);
-            // TBD LOCK
-            var existsJob = await db.ListRangeAsync(key);
-            var existsLst = existsJob.ToList();
-            foreach (var job in jobIds)
-            {
-                if (existsLst.IndexOf(job) >= 0)
-                {
-                    rptLst.Add(job);
-                }
-                else
-                {
-                    addLst.Add(job);
-                }
-            }
-            if (addLst.Any())
-            {
 
-                await db.ListLeftPushAsync(key, addLst.ToArray());
-            }
+            await db.LockActionAsync(key, async () =>
+            {
+                // LOCK
+                var existsJob = await db.ListRangeAsync(key);
+                var existsLst = existsJob.ToList();
+                foreach (var job in jobIds)
+                {
+                    if (existsLst.IndexOf(job) >= 0)
+                    {
+                        rptLst.Add(job);
+                    }
+                    else
+                    {
+                        addLst.Add(job);
+                    }
+                }
+                if (addLst.Any())
+                {
+
+                    await db.ListLeftPushAsync(key, addLst.ToArray());
+                }
+            });
 
             return rptLst;
         }

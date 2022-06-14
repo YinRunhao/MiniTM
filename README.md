@@ -1,3 +1,3 @@
 # MiniTM
 
-小型任务管理器
+MiniTM (Mini Task Manager) 是一个小型的后台任务管理器
