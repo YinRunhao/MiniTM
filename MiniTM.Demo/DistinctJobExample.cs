@@ -12,7 +12,8 @@ namespace MiniTM.Demo
         {
             SimpleJobFactory factory = new SimpleJobFactory();
             // 普通执行器
-            var mng = TaskManagerFactory.CreateDefaultManager().UseJobBoFactory(factory);
+            var mng = TaskManagerFactory.CreateDefaultManager()
+                .UseJobBoFactory(factory);
 
             string input = string.Empty;
             TaskProgressDto progress = default;

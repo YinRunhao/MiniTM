@@ -15,16 +15,16 @@ namespace MiniTM.Demo
         {
             SimpleJobFactory factory = new SimpleJobFactory();
             // 普通执行器
-            var mng = TaskManagerFactory.CreateDefaultManager().UseJobBoFactory(factory);
+            //var mng = TaskManagerFactory.CreateDefaultManager().UseJobBoFactory(factory);
 
             // 线程池执行器
-            //var mng = TaskManager.CreateDefaultManager()
-            //    .UseThreadPoolExecutor((cfg) =>
-            //    {
-            //        cfg.MaxThreads = 3;         // 最大线程数
-            //        cfg.TaskQueueLength = 1024; // 队列长度
-            //    })
-            //    .UseJobBoFactory(factory);
+            var mng = TaskManagerFactory.CreateDefaultManager()
+                .UseThreadPoolExecutor((cfg) =>
+                {
+                    cfg.MaxThreads = 3;         // 最大线程数
+                    cfg.TaskQueueLength = 1024; // 队列长度
+                })
+                .UseJobBoFactory(factory);
 
             string input = string.Empty;
             TaskProgressDto progress = default;

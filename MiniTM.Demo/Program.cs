@@ -20,6 +20,9 @@ namespace MiniTM.Demo
             // 不允许重复的工作项示例
             //var example = new DistinctJobExample();
 
+            // 使用Redis实现分布式任务管理器的示例
+            //var example = new RedisExample();
+
             await example.Run();
         }
     }

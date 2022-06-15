@@ -47,9 +47,10 @@ namespace MiniTM.Redis
             List<RedisValue> addLst = new List<RedisValue>();
 
             string key = GetDistinctJobKey(jobType);
+            string lockKey = key + ":lock";
             var db = await m_Conn.GetDatabaseAsync(m_Config.DefDb);
 
-            await db.LockActionAsync(key, async () =>
+            await db.LockActionAsync(lockKey, async () =>
             {
                 // LOCK
                 var existsJob = await db.ListRangeAsync(key);

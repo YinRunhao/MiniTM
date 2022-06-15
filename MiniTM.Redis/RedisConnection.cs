@@ -32,40 +32,8 @@ namespace MiniTM.Redis
         /// <param name="tryDelay">获取锁的重试间隔  单位：ms</param>
         public void LockAction(string lockName, Action act, int expiry = 10, int retry = 3, int tryDelay = 200)
         {
-            if (act.Method.IsDefined(typeof(AsyncStateMachineAttribute), false))
-            {
-                throw new ArgumentException("使用异步Action请调用LockActionAsync");
-            }
-
-            TimeSpan exp = TimeSpan.FromSeconds(expiry);
-            string token = Guid.NewGuid().ToString("N");
             var db = GetDatabase();
-            try
-            {
-                bool ok = false;
-                // 延迟重试
-                for (int test = 0; test < retry; test++)
-                {
-                    if (db.LockTake(lockName, token, exp))
-                    {
-                        ok = true;
-                        break;
-                    }
-                    else
-                    {
-                        Task.Delay(tryDelay).Wait();
-                    }
-                }
-                if (!ok)
-                {
-                    throw new InvalidOperationException($"获取锁[{lockName}]失败");
-                }
-                act();
-            }
-            finally
-            {
-                db.LockRelease(lockName, token);
-            }
+            db.LockAction(lockName, act, expiry, retry, tryDelay);
         }
 
         /// <summary>
@@ -78,36 +46,8 @@ namespace MiniTM.Redis
         /// <param name="tryDelay">获取锁的重试间隔  单位：ms</param>
         public async Task LockActionAsync(string lockName, Func<Task> act, int expiry = 10, int retry = 3, int tryDelay = 200)
         {
-            TimeSpan exp = TimeSpan.FromSeconds(expiry);
-            string token = Guid.NewGuid().ToString("N");
             var db = await GetDatabaseAsync();
-
-            try
-            {
-                bool ok = false;
-                // 延迟重试
-                for (int test = 0; test < retry; test++)
-                {
-                    if (await db.LockTakeAsync(lockName, token, exp))
-                    {
-                        ok = true;
-                        break;
-                    }
-                    else
-                    {
-                        await Task.Delay(tryDelay);
-                    }
-                }
-                if (!ok)
-                {
-                    throw new InvalidOperationException($"获取锁[{lockName}]失败");
-                }
-                await act();
-            }
-            finally
-            {
-                await db.LockReleaseAsync(lockName, token);
-            }
+            await db.LockActionAsync(lockName, act, expiry, retry, tryDelay);
         }
 
         public async Task<IDatabase> GetDatabaseAsync(int db)
